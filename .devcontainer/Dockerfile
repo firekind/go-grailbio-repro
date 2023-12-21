@@ -15,7 +15,9 @@ RUN apt update && apt install -y --no-install-recommends \
     patch \
     file \
     sudo \
-    libtinfo5
+    libtinfo5 \
+    libc6-dev \
+    libgcc-9-dev
 
 RUN BAZELISK="bazelisk-linux-amd64"; \
     BUILDIFIER="buildifier-linux-amd64"; \

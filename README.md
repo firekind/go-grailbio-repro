@@ -20,4 +20,14 @@ runtime.rt0_go()
         src/runtime/asm_amd64.s:349 +0x11c fp=0x7fff00b3e198 sp=0x7fff00b3e190 pc=0x561f866fe3bc
 ```
 
-While trying to run `//:gazelle_bin`
+The above error comes while using `llvm_toolchain_with_sysroot`. The error can be reproduced with the following command:
+
+```
+bazel run --extra_toolchains @llvm_toolchain_with_sysroot//:all //:gazelle_bin
+```
+
+However, when using a toolchain without sysroot, and ensuring `libgcc-9-dev` (in case of ubuntu) is installed in the development environment, The error does not occur:
+
+```
+bazel run --extra_toolchains @llvm_toolchain_without_sysroot//:all //:gazelle_bin
+```

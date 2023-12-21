@@ -29,8 +29,11 @@ llvm.toolchain(
         "@org_chromium_sysroot_linux_x64//:sysroot": "chromium_x64_sysroot",
     },
 )
-use_repo(llvm, "llvm_toolchain_with_sysroot")
-register_toolchains("@llvm_toolchain_with_sysroot//:all")
+llvm.toolchain(
+    name = "llvm_toolchain_without_sysroot",
+    llvm_version = "16.0.0",
+)
+use_repo(llvm, "llvm_toolchain_with_sysroot", "llvm_toolchain_without_sysroot")
 
 go_sdk = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
 go_sdk.download(version = "1.21.5")
