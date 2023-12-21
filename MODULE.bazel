@@ -1,0 +1,38 @@
+# buildifier: disable=module-docstring
+module(
+    name = "go-grailbio-repro",
+    version = "0.0",
+)
+
+bazel_dep(name = "gazelle", version = "0.34.0")
+bazel_dep(name = "toolchains_llvm", version = "0.10.3")
+bazel_dep(name = "rules_go", version = "0.43.0")
+
+# https://github.com/grailbio/bazel-toolchain/pull/235
+git_override(
+    module_name = "toolchains_llvm",
+    remote = "https://github.com/rrbutani/bazel-toolchain",
+    commit = "a6f32b6db9e644e8f4e3fa52e741358bc2bf99ae",
+)
+
+additional_deps = use_extension("//third_party:deps.bzl", "additional_deps")
+use_repo(additional_deps, "org_chromium_sysroot_linux_x64")
+
+llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
+llvm.toolchain(
+    name = "llvm_toolchain_with_sysroot",
+    llvm_version = "16.0.0",
+    sysroot = {
+        "linux-x86_64": "chromium_x64_sysroot",
+    },
+    sysroot_label_map = {
+        "@org_chromium_sysroot_linux_x64//:sysroot": "chromium_x64_sysroot",
+    },
+)
+use_repo(llvm, "llvm_toolchain_with_sysroot")
+register_toolchains("@llvm_toolchain_with_sysroot//:all")
+
+go_sdk = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
+go_sdk.download(version = "1.21.5")
+use_repo(go_sdk, "go_toolchains")
+register_toolchains("@go_toolchains//:all")

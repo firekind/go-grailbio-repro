@@ -1,0 +1,13 @@
+{
+    "name": "go-grailbio-repro",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "BazelBuild.vscode-bazel"
+            ]
+        }
+    }
+}
